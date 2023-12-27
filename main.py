@@ -32,12 +32,13 @@ score_one = 0
 score_two = 0
 
 rounds = 3
+isOver = False
 
 def reset_game():
     time.sleep(1)
     ball.x = width // 2 - 20
     ball.y = height // 2 - 20
-
+    
 while run:
     clock.tick(fps)
     factor += 0.001
@@ -91,12 +92,16 @@ while run:
         reset_game()
         factor = 1
 
-    if (score_one == rounds):
-        print("Player1 has Won!")
-        run = False
-    elif (score_two == rounds):
-        print("Player2 has Won!")
-        run = False
+    result_string = ''
+
+    if (score_one >= rounds):
+        result_string = 'Player 1 has Won'
+        isOver = True
+    elif (score_two >= rounds):
+        result_string = 'Player 2 has Won'
+        isOver = True
+
+    result_text = font.render(result_string, True, (255, 255, 255))
 
     score_one_text = font.render(f'{score_one}', True, (255, 255, 255))
     score_two_text = font.render(f'{score_two}', True, (255, 255, 255))
@@ -105,10 +110,16 @@ while run:
 
     screen.blit(score_one_text, (width // 4, 20))
     screen.blit(score_two_text, (width - (width // 4), 20))
+    screen.blit(result_text, ((width // 2) - (result_text.get_width() // 2), 20))
     pygame.draw.rect(screen, (255, 255, 255), paddle_one)
     pygame.draw.rect(screen, (255, 255, 255), paddle_two)
     pygame.draw.circle(screen, (255, 255, 255), ball.center, ball.width // 2)
 
     pygame.display.flip()
+
+    if isOver:
+        time.sleep(2)
+        run = False
+
 
 pygame.quit()
